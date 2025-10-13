@@ -27,6 +27,8 @@
 
 [传送门](https://scriptcat.org/zh-CN/users/96219)作者脚本猫地址
 
+[传送门](https://github.com/hgztask/mk-MikuFansDataHive)脚本开源地址(github)
+
 ## 赞助
 
 - 如果您觉得本脚本对您有帮助，欢迎赞助作者，以支持脚本的更新和开发。

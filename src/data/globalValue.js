@@ -7,6 +7,11 @@ const b_url = 'https://space.bilibili.com/473239155'
 //当前脚本所在脚本猫地址
 const scriptCat_js_url = 'https://scriptcat.org/zh-CN/script-show-page/4389'
 
+//脚本开源地址
+const github_url = 'https://github.com/hgztask/mk-MikuFansDataHive'
+
+
+
 /**
  * 返回网页前台window对象
  * @returns {window}
@@ -23,5 +28,5 @@ try {
 
 
 export default {
-    getUnsafeWindow, group_url, b_url, scriptCat_js_url
+    getUnsafeWindow, group_url, b_url, scriptCat_js_url, github_url
 }
