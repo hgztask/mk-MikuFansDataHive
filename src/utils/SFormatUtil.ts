@@ -27,7 +27,7 @@ const toPlayCountOrBulletChat = (str: string): number => {
  * @param timeStr {string}
  * @returns number
  */
-const timeStringToSeconds = (timeStr: string) => {
+const timeStringToSeconds = (timeStr: string): number => {
     if (!timeStr) {
         return -1
     }

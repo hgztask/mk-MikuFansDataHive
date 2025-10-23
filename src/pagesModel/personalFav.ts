@@ -1,6 +1,6 @@
-import elUtil from "../utils/elUtil.ts";
-import defUtil from "../utils/defUtil.ts";
-import SFormatUtil from "../utils/SFormatUtil.ts";
+import elUtil from "../utils/elUtil";
+import defUtil from "../utils/defUtil";
+import SFormatUtil from "../utils/SFormatUtil";
 
 //获取当前收藏夹名称(视频列表上方标题)
 const getCurrentFavName = async () => {
@@ -17,24 +17,24 @@ const getMyFollowAuthorInfo = async () => {
     return {name, uid}
 }
 
-const getVideoDataList = async () => {
+const getVideoDataList = async (): Promise<videoDataType[]> => {
     const els = await elUtil.findElements('.items>.items__item');
     const favName = await getCurrentFavName();
-    const list = [];
+    const list: videoDataType[] = [];
     const queryParams = defUtil.parseUrl(location.href).queryParams;
     const favType = queryParams['ftype'];
     const favId = queryParams['fid'];
     for (const el of els) {
-        const titleEl = el.querySelector('.bili-video-card__title');
-        const titleAEl = el.querySelector('a');
-        const imgEl = el.querySelector('.bili-cover-card__thumbnail>img');
+        const titleEl = el.querySelector('.bili-video-card__title')!;
+        const titleAEl = el.querySelector('a')!;
+        const imgEl: HTMLImageElement = el.querySelector('.bili-cover-card__thumbnail>img')!;
         const title = titleEl.textContent.trim();
         const stats = el.querySelectorAll('.bili-cover-card__stats>div>span');
-        let name, uid;
+        let name, uid: number;
         if (favType === 'create') {
             //是自己创建的收藏夹时
-            const userEl = el.querySelector('.bili-video-card__author');
-            name = userEl.querySelector('span[title]').textContent.trim();
+            const userEl: HTMLAreaElement = el.querySelector('.bili-video-card__author')!;
+            name = userEl.querySelector('span[title]')!.textContent.trim();
             uid = defUtil.getUrlUID(userEl.href);
         } else {
             const authorInfo = await getMyFollowAuthorInfo();
@@ -55,8 +55,7 @@ const getVideoDataList = async () => {
             views = SFormatUtil.toPlayCountOrBulletChat(stats[0].textContent.trim());
             bulletChat = SFormatUtil.toPlayCountOrBulletChat(stats[1].textContent.trim());
             originalDuration = stats[2].textContent.trim();
-            const durationStr = SFormatUtil.timeStringToSeconds(originalDuration);
-            duration = parseInt(durationStr);
+            duration = SFormatUtil.timeStringToSeconds(originalDuration);
             if (imgEl !== null) {
                 imgSrc = imgEl.src;
             }
@@ -66,17 +65,15 @@ const getVideoDataList = async () => {
     return list;
 }
 
-window.getVideoDataList = getVideoDataList;
-
 //获取当前收藏夹所有页面数据，根据bv号去重
 const getCurrenFavAllPageDataList = async () => {
-    const list = [];
+    const list: videoDataType[] = [];
     const nextPageBut = await elUtil.findElement('.vui_pagenation--btn-side.vui_pagenation--btn:last-child');
     while (nextPageBut.disabled === false) {
         await defUtil.wait(1500);
         const videoList = await getVideoDataList();
         for (let data of videoList) {
-            if (list.some((item) => item.bv === data.bv)) {
+            if (list.some((item: { bv: string }) => item.bv === data.bv)) {
                 continue;
             }
             list.push(data);

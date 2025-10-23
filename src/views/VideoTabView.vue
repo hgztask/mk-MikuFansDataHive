@@ -5,14 +5,17 @@ import defUtil from "../utils/defUtil";
 import favCommon from "../pagesModel/favCommon";
 
 export default {
-  data() {
+  data(): {
+    videoList: videoDataType[],
+    appendModeV: boolean
+  } {
     return {
       appendModeV: false,
       videoList: []
     }
   },
   methods: {
-    addTo(list) {
+    addTo(list: videoDataType[]) {
       for (let data of list) {
         if (this.videoList.some((item) => item.bv === data.bv)) {
           continue;
@@ -70,7 +73,7 @@ export default {
         return
       }
       console.log(JSON.parse(JSON.stringify(this.videoList)));
-      this.$notify({message: '已打印到控制台'});
+      this.$notify({title: "tip", message: '已打印到控制台'});
     },
     outToFileBut() {
       if (this.videoList.length === 0) {
@@ -80,7 +83,7 @@ export default {
       personalFav.getCurrentFavName().then(favName => {
         const filename = favName + '收藏夹视频列表.json';
         defUtil.fileDownload(JSON.stringify(this.videoList), filename)
-        this.$notify({message: `${filename}已导出，需按需保存到本地.`})
+        this.$notify({title: 'tip', message: `${filename}已导出，需按需保存到本地.`})
       })
     }
   }
