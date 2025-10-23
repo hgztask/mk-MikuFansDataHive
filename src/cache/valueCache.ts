@@ -10,7 +10,7 @@ class ValueCache {
      * @param {*} value - 值。
      * @returns {any|boolean} value的值
      */
-    set(key, value) {
+    set(key: string, value: any) {
         this.#mapCache.set(key, value)
         return value;
     }
@@ -21,7 +21,7 @@ class ValueCache {
      * @param defaultValue - 默认值
      * @returns {*} 返回与键关联的值，如果键不存在则返回 undefined。
      */
-    get(key, defaultValue = null) {
+    get(key: string, defaultValue: any = null) {
         const newVar = this.#mapCache.get(key);
         if (newVar) {
             return newVar;

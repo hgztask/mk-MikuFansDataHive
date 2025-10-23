@@ -7,7 +7,12 @@ class EventEmitter {
     /**
      * 普通事件中心，存储已订阅的普通事件和待订阅的普通事件。
      */
-    #regularEvents = {
+    #regularEvents: {
+        events: { [key: string]: Function },
+        futures: { [key: string]: any[] },
+        parametersDebounce: { [key: string]: any },
+        preHandles: { [key: string]: Function }
+    } = {
         // 普通事件
         events: {},
         // 待订阅事件
@@ -30,25 +35,6 @@ class EventEmitter {
     }
 
     /**
-     * 普通待订阅事件处理函数
-     * 用于处理on事件时。
-     * 先发送通知时(send)如果待订阅事件中有该事件名，则按顺序执行对应回调函数并接受对应的数据。
-     * 反之先订阅(on)，不做处理。
-     * @param eventName {string} 事件名
-     * @param callback {function} 回调函数，当事件被触发时执行
-     */
-    #handlePendingEvents(eventName, callback) {
-        const futureEvents = this.#regularEvents.futures;
-        if (futureEvents[eventName]) {
-            for (const eventData of futureEvents[eventName]) {
-                const preHandleData = this.#executePreHandle(eventName, eventData)
-                callback.apply(null, preHandleData)
-            }
-            delete futureEvents[eventName];
-        }
-    }
-
-    /**
      * 订阅普通事件，将回调函数添加到事件监听器表中。
      * 一个订阅事件只有一个对应的回调函数，如需覆盖，则需要重新订阅。
      * 收到未来的订阅事件消息时，依次执行该事件名对应的回调函数。
@@ -57,9 +43,9 @@ class EventEmitter {
      * @param overrideEvents {boolean} - 是否覆盖已订阅事件
      * @returns {EventEmitter}
      */
-    on(eventName, callback, overrideEvents = false) {
+    on(eventName: string, callback: Function, overrideEvents = false) {
         // 处理已订阅事件
-        const events = this.#regularEvents.events;
+        const events: any = this.#regularEvents.events;
         // 如果事件已经订阅，则提前结束
         if (events[eventName]) {
             if (overrideEvents) {
@@ -81,26 +67,10 @@ class EventEmitter {
      * @param callback {function} 回调函数
      * @returns {EventEmitter}
      */
-    onPreHandle(eventName, callback) {
-        const preHandles = this.#regularEvents.preHandles;
+    onPreHandle(eventName: string, callback: Function) {
+        const preHandles: any = this.#regularEvents.preHandles;
         preHandles[eventName] = callback;
         return this;
-    }
-
-    /**
-     * 执行预处理函数
-     * 如没有预处理函数时，则返回原数据，反之返回预处理处理后的数据
-     * @param eventName {string} 事件名
-     * @param data {*} 数据
-     * @returns {array} 预处理返回的数据或原数据
-     */
-    #executePreHandle(eventName, data) {
-        const preHandles = this.#regularEvents.preHandles;
-        const callback = preHandles[eventName];
-        if (callback) {
-            return callback.apply(null, data);
-        }
-        return data;
     }
 
     /**
@@ -109,8 +79,8 @@ class EventEmitter {
      * @param {string} eventName - 事件名称
      * @param {function} callback - 处理消息的回调函数
      */
-    handler(eventName, callback) {
-        const handlerEvents = this.#callbackEvents.events;
+    handler(eventName: string, callback: Function) {
+        const handlerEvents: any = this.#callbackEvents.events;
         if (handlerEvents[eventName]) {
             throw new Error('该事件名已经存在，请更换事件名')
         }
@@ -123,9 +93,9 @@ class EventEmitter {
      * @param {...*} data - 发送的数据
      * @returns {Promise<any>} 返回处理结果
      */
-    invoke(eventName, ...data) {
+    invoke(eventName: string, ...data: any[]) {
         return new Promise(resolve => {
-            const handlerEvents = this.#callbackEvents.events;
+            const handlerEvents: { [key: string]: Function } = this.#callbackEvents.events;
             if (handlerEvents[eventName]) {
                 resolve(handlerEvents[eventName](...data));
                 return
@@ -145,9 +115,9 @@ class EventEmitter {
      * @param {...*} data - 发送的数据
      * @returns {EventEmitter}
      */
-    send(eventName, ...data) {
+    send(eventName: string, ...data: any[]) {
         const ordinaryEvents = this.#regularEvents;
-        const events = ordinaryEvents.events;
+        const events: { [key: string]: Function } = ordinaryEvents.events;
         const event = events[eventName];
         if (event) {
             const preHandleData = this.#executePreHandle(eventName, data);
@@ -172,7 +142,7 @@ class EventEmitter {
      * @param eventName {string} 事件名称
      * @param data {*} 数据
      */
-    sendDebounce(eventName, ...data) {
+    sendDebounce(eventName: string, ...data: any[]) {
         const parametersDebounce = this.#regularEvents.parametersDebounce;
         let timeOutConfig = parametersDebounce[eventName];
         if (timeOutConfig) {
@@ -193,7 +163,7 @@ class EventEmitter {
      * @param eventName {string} 事件名称
      * @param wait {number} 防抖时间
      */
-    setDebounceWaitTime(eventName, wait) {
+    setDebounceWaitTime(eventName: string, wait: number) {
         const timeOutConfig = this.#regularEvents.parametersDebounce[eventName];
         if (timeOutConfig) {
             timeOutConfig.wait = wait;
@@ -211,7 +181,7 @@ class EventEmitter {
      * @param eventName {string} 事件名称
      * @param data {*} 数据
      */
-    emit(eventName, ...data) {
+    emit(eventName: string, ...data: any[]) {
         const callback = this.#regularEvents.events[eventName];
         if (callback) {
             callback.apply(null, data);
@@ -220,31 +190,46 @@ class EventEmitter {
     }
 
     /**
-     * 移除对应事件名的订阅。
-     * 会在事件中心中移除对应事件名和对应的事件函数。
-     * @param {string} eventName - 要移除的事件名
-     * @returns {boolean} 是否移除成功
-     */
-    off(eventName) {
-        const events = this.#regularEvents.events;
-        if (events[eventName]) {
-            delete events[eventName]
-            return true
-        }
-        const handlerEvents = this.#callbackEvents.events;
-        if (handlerEvents[eventName]) {
-            delete handlerEvents[eventName]
-            return true
-        }
-        return false
-    }
-
-    /**
      * 设置回调事件查找事件间隔时间。
      * @param {number} interval - 间隔时间，单位为毫秒
      */
-    setInvokeInterval(interval) {
+    setInvokeInterval(interval: number) {
         this.#callbackEvents.callbackInterval = interval;
+    }
+
+    /**
+     * 普通待订阅事件处理函数
+     * 用于处理on事件时。
+     * 先发送通知时(send)如果待订阅事件中有该事件名，则按顺序执行对应回调函数并接受对应的数据。
+     * 反之先订阅(on)，不做处理。
+     * @param eventName {string} 事件名
+     * @param callback {function} 回调函数，当事件被触发时执行
+     */
+    #handlePendingEvents(eventName: string, callback: Function) {
+        const futureEvents: any = this.#regularEvents.futures;
+        if (futureEvents[eventName]) {
+            for (const eventData of futureEvents[eventName]) {
+                const preHandleData = this.#executePreHandle(eventName, eventData)
+                callback.apply(null, preHandleData)
+            }
+            delete futureEvents[eventName];
+        }
+    }
+
+    /**
+     * 执行预处理函数
+     * 如没有预处理函数时，则返回原数据，反之返回预处理处理后的数据
+     * @param eventName {string} 事件名
+     * @param data {*} 数据
+     * @returns {array} 预处理返回的数据或原数据
+     */
+    #executePreHandle(eventName: string, data: any) {
+        const preHandles: any = this.#regularEvents.preHandles;
+        const callback = preHandles[eventName];
+        if (callback) {
+            return callback.apply(null, data);
+        }
+        return data;
     }
 
     /**

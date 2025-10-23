@@ -1,7 +1,6 @@
-<script>
-
-import globalValue from "../data/globalValue.js";
-import {eventEmitter} from "../model/EventEmitter.js";
+<script lang="ts">
+import globalValue from "../data/globalValue";
+import {eventEmitter} from "../model/EventEmitter";
 
 /**
  * 关于与反馈组件

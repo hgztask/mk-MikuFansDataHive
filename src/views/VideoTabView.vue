@@ -1,8 +1,8 @@
-<script>
-import personalFav from "../pagesModel/personalFav.js";
-import {eventEmitter} from "../model/EventEmitter.js";
-import defUtil from "../utils/defUtil.js";
-import favCommon from "../pagesModel/favCommon.js";
+<script lang="ts">
+import personalFav from "../pagesModel/personalFav";
+import {eventEmitter} from "../model/EventEmitter";
+import defUtil from "../utils/defUtil";
+import favCommon from "../pagesModel/favCommon";
 
 export default {
   data() {

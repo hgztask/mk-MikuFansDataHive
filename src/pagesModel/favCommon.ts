@@ -1,4 +1,4 @@
-import elUtil from "../utils/elUtil.js";
+import elUtil from "../utils/elUtil";
 
 //获取左侧栏当前选中项
 const getLeftSidebarItemActive = () => {

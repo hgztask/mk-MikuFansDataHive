@@ -3,7 +3,7 @@
  * @param title {string} 标题
  * @param url {string} url地址
  */
-const staticRoute = (title, url) => {
+const staticRoute = (title: string, url: string) => {
     console.log("静态路由", title, url)
 }
 
@@ -12,7 +12,7 @@ const staticRoute = (title, url) => {
  * @param title {string} 标题
  * @param url {string} url地址
  */
-const dynamicRouting = (title, url) => {
+const dynamicRouting = (title: string, url: string) => {
     console.log("动态路由", title, url);
 }
 

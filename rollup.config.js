@@ -4,13 +4,16 @@ import esbuild from 'rollup-plugin-esbuild';
 import serve from 'rollup-plugin-serve'
 import replace from '@rollup/plugin-replace'
 import test_plugin from './plugin/rollup-test-plugin.js'
+import typescript from "@rollup/plugin-typescript";
+import commonjs from "@rollup/plugin-commonjs";
+import nodeResolve from "@rollup/plugin-node-resolve";
 
 // 开发环境为 true，生产环境为 false，默认为开发环境
 const __DEV__ = (process.env.ROLLUP_ENV || 'development') === 'development';
 export default {
     // 性能监控
     perf: !__DEV__,
-    input: 'src/main.js',
+    input: 'src/main.ts',
     external: ['vue', 'dexie'],
     plugins: [
         // 使用 replace 插件定义全局变量
@@ -30,9 +33,18 @@ export default {
         importContent({
             fileName: ['.css']
         }),
+        nodeResolve({
+            extensions: ['.js', '.ts', '.json', '.vue'] // 确保能解析 .vue 文件
+        }),
         vue({
-            css: true,
-            compileTemplate: true // 编译模板
+            css: false,
+            compileTemplate: true, // 编译模板
+            template: {
+                isProduction: true
+            }
+        }),
+        commonjs({
+            extensions: ['.js', '.ts', '.vue'] // 确保能处理 .vue 文件
         }),
         test_plugin({
             isDev: __DEV__,
@@ -48,7 +60,12 @@ export default {
                         drop_console: false, // 不删除 console.log 语句
                         drop_debugger: false // 不删除 debugger 语句
                     }
-                })*/
+                })*/,
+        typescript({
+            tsconfig: './tsconfig.json',
+            declaration: false,
+            // declarationDir: 'dist/types'
+        })
     ],
     output: {
         file: 'dist/local_build.js',

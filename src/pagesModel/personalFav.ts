@@ -1,6 +1,6 @@
-import elUtil from "../utils/elUtil.js";
-import defUtil from "../utils/defUtil.js";
-import SFormatUtil from "../utils/SFormatUtil.js";
+import elUtil from "../utils/elUtil.ts";
+import defUtil from "../utils/defUtil.ts";
+import SFormatUtil from "../utils/SFormatUtil.ts";
 
 //获取当前收藏夹名称(视频列表上方标题)
 const getCurrentFavName = async () => {

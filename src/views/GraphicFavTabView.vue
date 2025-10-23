@@ -1,7 +1,7 @@
 <script>
-import graphicFav from "../pagesModel/graphicFav.js";
-import defUtil from "../utils/defUtil.js";
-import favCommon from "../pagesModel/favCommon.js";
+import graphicFav from "../pagesModel/graphicFav";
+import defUtil from "../utils/defUtil";
+import favCommon from "../pagesModel/favCommon";
 
 export default {
   data() {

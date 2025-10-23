@@ -1,11 +1,11 @@
-<script>
-import {eventEmitter} from "./model/EventEmitter.js";
+<script lang="ts">
+import {eventEmitter} from "./model/EventEmitter";
 import ShowVideoDataTableDialog from "./eventEmitter_components/ShowVideoDataTableDialog.vue";
 import VideoTabView from "./views/VideoTabView.vue";
 import GraphicFavTabView from "./views/GraphicFavTabView.vue";
 import AboutAndFeedbackView from "./views/AboutAndFeedbackView.vue";
 import ShowImgDialog from "./eventEmitter_components/ShowImgDialog.vue";
-import {getDrawerShortcutKeyGm} from "./data/localMKData.js";
+import {getDrawerShortcutKeyGm} from "./data/localMKData";
 import PanelSettingsView from "./views/PanelSettingsView.vue";
 import DonateLayoutView from "./views/DonateLayoutView.vue";
 

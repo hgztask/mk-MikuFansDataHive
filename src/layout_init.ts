@@ -1,6 +1,6 @@
-import defUtil from "./utils/defUtil.js";
+import defUtil from "./utils/defUtil";
 import App from "./App.vue";
-import elUtil from "./utils/elUtil.js";
+import elUtil from "./utils/elUtil";
 
 if (document.head.querySelector('#element-ui-css') === null) {
     const linkElement = document.createElement('link');

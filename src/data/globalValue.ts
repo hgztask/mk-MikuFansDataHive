@@ -10,23 +10,14 @@ const scriptCat_js_url = 'https://scriptcat.org/zh-CN/script-show-page/4389'
 //脚本开源地址
 const github_url = 'https://github.com/hgztask/mk-MikuFansDataHive'
 
-
-
-/**
- * 返回网页前台window对象
- * @returns {window}
- */
-const getUnsafeWindow = () => {
-    return unsafeWindow
-}
-
 try {
-    unsafeWindow['mk_favoritesdataacquisition'] = window;
+    unsafeWindow.mkFavWin = window;
 } catch (e) {
     console.warn('挂载脚本window环境到前端环境失败', e);
 }
 
-
 export default {
-    getUnsafeWindow, group_url, b_url, scriptCat_js_url, github_url
+    group_url, b_url, scriptCat_js_url, github_url,
+    //更新日志链接
+    update_log_url: 'https://docs.qq.com/doc/DSnhjSVZmRkpCd0Nj'
 }

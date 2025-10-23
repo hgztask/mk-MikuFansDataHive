@@ -1,5 +1,5 @@
-<script>
-import {eventEmitter} from "../model/EventEmitter.js";
+<script lang="ts">
+import {eventEmitter} from "../model/EventEmitter";
 
 export default {
   data() {

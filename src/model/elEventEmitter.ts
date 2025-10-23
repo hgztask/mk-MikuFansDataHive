@@ -8,13 +8,13 @@ class ElEventEmitter {
 
     /**
      * 网页元素添加事件
-     * @param el {Element|Document|any} 网页元素
-     * @param eventName {string} 事件名称
+     * @param el {Element} 网页元素
+     * @param eventName {ElementEventMap} 事件名称
      * @param callback {function} 事件回调函数
      * @param repeated {boolean} 是否允许重复添加事件，默认不允许false
      *
      */
-    addEvent(el, eventName, callback, repeated = false) {
+    addEvent(el: Element, eventName: ElementEventMap | any, callback: any, repeated = false) {
         const elEvents = this.#elEvents;
         if (!elEvents.has(el)) {
             elEvents.set(el, {events: [], attrs: []})
@@ -39,7 +39,7 @@ class ElEventEmitter {
      * @param eventName {string} 事件名称
      * @returns {boolean}
      */
-    hasEventName(el, eventName) {
+    hasEventName(el: Element, eventName: string) {
         const elEvents = this.#elEvents;
         if (elEvents.has(el)) {
             return true
